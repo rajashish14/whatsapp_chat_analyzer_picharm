@@ -9,4 +9,3 @@ TextBlob
 textblob
 urlextract
 pandas
-re
