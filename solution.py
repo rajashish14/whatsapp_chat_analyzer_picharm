@@ -4,6 +4,7 @@ from collections import Counter
 import emoji
 import nltk
 from nltk.corpus import stopwords
+from pyexpat.errors import messages
 from textblob import TextBlob
 from urlextract import URLExtract
 # Download required NLTK resources (only needed once)
@@ -86,6 +87,6 @@ def get_most_used_word(selected_user, df):
 def get_wordcloud(selected_user, df):
     if selected_user != "Overall":
         df = df[df['users_name'] == selected_user]
-
+    df = df[df[messages]!= '<Media omitted>\n']
     text = ' '.join(df['messages'])
     return text
