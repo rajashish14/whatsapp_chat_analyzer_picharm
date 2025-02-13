@@ -69,7 +69,7 @@ def get_most_used_word(selected_user, df):
         df = df[df['users_name'] == selected_user]
 
     # Convert messages column to a single string
-    messages = df['messages'].dropna().str.cat(sep=' ')
+    messages = df[df['messages']!= '<Media omitted>\n'].dropna().str.cat(sep=' ')
 
     # Tokenize using regex
     tokens = re.findall(r'\b[a-zA-Z]+\b', messages.lower())
