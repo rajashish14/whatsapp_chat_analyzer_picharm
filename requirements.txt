@@ -1,0 +1,12 @@
+streamlit
+seaborn
+matplotlib
+wordcloud
+nltk
+STOPWORDS
+emoji
+TextBlob
+textblob
+urlextract
+pandas
+re
