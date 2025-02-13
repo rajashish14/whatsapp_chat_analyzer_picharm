@@ -10,5 +10,5 @@ textblob
 urlextract
 pandas
 pdfplumber
-docx
-Document
+python-docx
+
