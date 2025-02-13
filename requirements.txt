@@ -9,3 +9,6 @@ TextBlob
 textblob
 urlextract
 pandas
+pdfplumber
+docx
+Document

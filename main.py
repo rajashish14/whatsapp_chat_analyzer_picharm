@@ -6,20 +6,65 @@ import pandas as pd
 import seaborn as sns
 import streamlit as st
 from wordcloud import WordCloud, STOPWORDS
-
+import pdfplumber
+from docx import Document
+import pandas as pd
+import os
 import preprocessor
 import solution
 
+
+def extract_text_from_file(uploaded_file):
+   file_extension = uploaded_file.name.split(".")[-1].lower()
+   temp_path = f"temp_uploaded.{file_extension}"
+
+   with open(temp_path, "wb") as f:
+      f.write(uploaded_file.getbuffer())
+
+   try:
+      if file_extension == "txt":
+         with open(temp_path, "r", encoding="utf-8") as f:
+            text = f.read()
+
+      elif file_extension == "pdf":
+         text = ""
+         with pdfplumber.open(temp_path) as pdf:
+            for page in pdf.pages:
+               text += page.extract_text() + "\n"
+
+      elif file_extension == "docx":
+         doc = Document(temp_path)
+         text = "\n".join([para.text for para in doc.paragraphs])
+
+      elif file_extension in ["xls", "xlsx"]:
+         df = pd.read_excel(temp_path)
+         text = df.to_string()
+
+      else:
+         text = "Unsupported file format."
+
+   except Exception as e:
+      text = f"Error extracting text: {str(e)}"
+
+   os.remove(temp_path)  # Clean up temporary file
+   return text
+
+
 st.sidebar.title("whatsApp Chat Analyzer")
 
-uploaded_file = st.sidebar.file_uploader("📂 choose a file")
+uploaded_file = st.sidebar.file_uploader("📂 Choose a file", type=["txt", "csv", "pdf", "docx"])
 if uploaded_file is not None:
-   bytes_data = uploaded_file.getvalue()
-   data = bytes_data.decode("utf-8")
-   df = preprocessor.preprocess(data)
+   file_extension = uploaded_file.name.split(".")[-1]
 
-   st.subheader("📄 Processed Data Preview")
-   st.dataframe(df)
+   if uploaded_file is not None:
+      data = extract_text_from_file(uploaded_file)
+
+      if data.startswith("Error"):
+         st.error(data)
+      else:
+         df = preprocessor.preprocess(data)
+         st.subheader("📄 Processed Data Preview")
+         st.dataframe(df)
 
    # fetch unique users...
 
