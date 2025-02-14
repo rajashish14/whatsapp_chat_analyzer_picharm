@@ -91,3 +91,7 @@ def get_wordcloud(selected_user, df):
     df = df[df['messages']!= '<Media omitted>\n']
     text = ' '.join(df['messages'])
     return text
+def get_filtered_df(selected_users, df):
+    if selected_users != "Overall":
+        filtered_df = df[df['users_name'] == selected_users]
+    return filtered_df

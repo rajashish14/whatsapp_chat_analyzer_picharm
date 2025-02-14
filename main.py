@@ -205,7 +205,8 @@ if uploaded_file is not None:
       # most busy days...
       with col1:
          st.subheader("📅 Most Busy Days")
-         day_counts = df['day_name'].value_counts()
+         filtered_df = solution.get_filtered_df(selected_users, df)
+         day_counts = filtered_df['day_name'].value_counts()
 
          fig, ax = plt.subplots(figsize=(10, 4))
          sns.barplot(x=day_counts.index, y=day_counts.values, hue=day_counts.index, palette="viridis", ax=ax, legend=False)
@@ -218,7 +219,8 @@ if uploaded_file is not None:
       # most active month....
       with col2:
          st.subheader("📆 Most Busy Months")
-         month_counts = df['month_name'].value_counts()
+         filtered_df = solution.get_filtered_df(selected_users, df)
+         month_counts = filtered_df['month_name'].value_counts()
 
          fig, ax = plt.subplots(figsize=(10, 4))
          sns.barplot(x=month_counts.index, y=month_counts.values, hue=month_counts.index, palette="coolwarm", ax=ax, legend=False)
@@ -231,8 +233,8 @@ if uploaded_file is not None:
 
       # Activity Heatmap (Hour vs. Day)
       st.subheader("⏳ Activity Heatmap")
-
-      heatmap_data = df.groupby(['day', 'hour']).size().unstack().fillna(0).astype(int)
+      filtered_df = solution.get_filtered_df(selected_users, df)
+      heatmap_data = filtered_df.groupby(['day', 'hour']).size().unstack().fillna(0).astype(int)
 
       fig, ax = plt.subplots(figsize=(12, 5))
       sns.heatmap(heatmap_data, cmap="Blues", linewidths=0.5, annot=True, fmt=".0f", ax=ax)
@@ -244,9 +246,9 @@ if uploaded_file is not None:
 
       # Timeline....
       st.subheader("📅 Activity Timeline")
-
-      weekly_timeline = df.groupby('day_name').size()
-      monthly_timeline = df.groupby('month_name').size()
+      filtered_df = solution.get_filtered_df(selected_users, df)
+      weekly_timeline = filtered_df.groupby('day_name').size()
+      monthly_timeline = filtered_df.groupby('month_name').size()
 
       col1, col2 = st.columns(2)
 
